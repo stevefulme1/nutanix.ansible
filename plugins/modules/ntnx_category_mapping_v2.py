@@ -11,66 +11,64 @@ __metaclass__ = type
 DOCUMENTATION = r"""
 ---
 module: ntnx_category_mapping_v2
-short_description: Create, Update, Delete DS category mapping
+short_description: Create, Update, Delete Directory Service Category Mapping
 version_added: 2.6.0
 description:
-    - Create, Update, Delete a mapping between a group in Active Directory and a Category.
+    - Create, Update, Delete Directory Service Category Mapping
     - This module uses PC v4 APIs based SDKs
 notes:
     - >-
       This module requires the following Nutanix IAM roles to be assigned to the user performing the operation.
       The required roles depend on the operation being performed.
     - >-
-      B(Create a DS Category Mapping) -
-      Operation Name: Create Category Mapping -
-      Required Roles: Flow Admin, Prism Admin, Super Admin
+      B(Create a Directory Service Category Mapping) -
+      Required Roles: Flow Admin, Prism Admin, Project Manager, Super Admin
     - >-
-      B(Delete a DS Category Mapping) -
-      Operation Name: Delete Category Mapping -
-      Required Roles: Flow Admin, Prism Admin, Super Admin
+      B(Delete a Directory Service Category Mapping) -
+      Required Roles: Flow Admin, Prism Admin, Project Manager, Super Admin
     - >-
-      B(Update a DS Category Mapping by external identifier) -
-      Operation Name: Update Category Mapping -
-      Required Roles: Flow Admin, Prism Admin, Super Admin
+      B(Update a Directory Service Category Mapping by external identifier) -
+      Required Roles: Flow Admin, Prism Admin, Project Manager, Super Admin
     - "Ref: U(https://developers.nutanix.com/api-reference?namespace=microseg)"
 options:
     ext_id:
         description:
-            - External ID to update or delete specific DS category mapping.
+            - External ID to update or delete specific Category Mapping.
         type: str
         required: false
     name:
         description:
-            - A short identifier / name of the DS category mapping.
+            - Name of Category Mapping.
         type: str
     category_name:
         description:
-            - The category key name for the mapping.
+            - The name for the category that this mapping is for.
         type: str
     category_value:
         description:
-            - The category value for the mapping.
+            - The value for the category that this mapping is for.
         type: str
     ad_info:
         description:
-            - Active Directory information for the category mapping.
+            - A mapping to an object in Active Directory.
         type: dict
         suboptions:
             directory_service_reference:
                 description:
-                    - External ID of the directory service configuration.
+                    - The External ID of the directory service that will be used for mapping.
                 type: str
                 required: true
             object_identifier:
                 description:
-                    - The object identifier (UUID) used in the mapping.
+                    - The object identifier for the object in Active Directory.
                 type: str
                 required: true
-            object_path:
+            status:
                 description:
-                    - The LDAP path of the AD object.
+                    - The mapping status of Active Directory Mapping.
                 type: str
                 required: false
+                choices: ["USABLE", "DIRECTORY_NOT_CONFIGURED", "DELETED"]
 
 extends_documentation_fragment:
       - nutanix.ncp.ntnx_credentials
@@ -79,10 +77,11 @@ extends_documentation_fragment:
       - nutanix.ncp.ntnx_proxy_v2
 author:
  - Abhinav Bansal (@abhinavbansal29)
+ - George Ghawali (@george-ghawali)
 """
 
 EXAMPLES = r"""
-- name: Create DS category mapping
+- name: Create Category Mapping
   nutanix.ncp.ntnx_category_mapping_v2:
     nutanix_host: <pc_ip>
     nutanix_username: <user>
@@ -98,7 +97,7 @@ EXAMPLES = r"""
   register: result
   ignore_errors: true
 
-- name: Update DS category mapping
+- name: Update Category Mapping
   nutanix.ncp.ntnx_category_mapping_v2:
     nutanix_host: <pc_ip>
     nutanix_username: <user>
@@ -115,7 +114,7 @@ EXAMPLES = r"""
   register: result
   ignore_errors: true
 
-- name: Delete DS category mapping
+- name: Delete Category Mapping
   nutanix.ncp.ntnx_category_mapping_v2:
     nutanix_host: <pc_ip>
     nutanix_username: <user>
@@ -130,7 +129,7 @@ EXAMPLES = r"""
 RETURN = r"""
 response:
   description:
-    - Response when we create, update or delete a DS category mapping.
+    - Response when we create, update or delete a Category Mapping.
     - Response will contain DS category mapping details if C(wait) is true and the operation is create or update.
     - Response will contain Task details if C(wait) is true and the operation is delete.
     - Response will contain Task details if C(wait) is false.
@@ -173,10 +172,10 @@ msg:
     description: This indicates the message if any message occurred
     returned: When there is an error, module is idempotent or check mode (in delete operation)
     type: str
-    sample: "Failed generating create DS category mapping Spec"
+    sample: "Failed generating create Category Mapping Spec"
 
 ext_id:
-  description: The DS category mapping ext_id
+  description: The Category Mapping ext_id
   returned: always
   type: str
   sample: "b215708c-252f-400c-bc90-2f36242d3d3c"
@@ -258,9 +257,7 @@ def create_category_mapping(module, api_instance, result):
 
     if err:
         result["error"] = err
-        module.fail_json(
-            msg="Failed generating create DS category mapping Spec", **result
-        )
+        module.fail_json(msg="Failed generating create Category Mapping Spec", **result)
 
     if module.check_mode:
         result["response"] = strip_internal_attributes(spec.to_dict())
@@ -273,7 +270,7 @@ def create_category_mapping(module, api_instance, result):
         raise_api_exception(
             module=module,
             exception=e,
-            msg="Api Exception raised while creating DS category mapping",
+            msg="Api Exception raised while creating Category Mapping",
         )
 
     task_ext_id = resp.data.ext_id
@@ -307,25 +304,12 @@ def update_category_mapping(module, api_instance, result):
     result["ext_id"] = ext_id
 
     current_spec = get_ds_category_mapping(module, api_instance, ext_id)
-
     sg = SpecGenerator(module)
     update_spec, err = sg.generate_spec(obj=deepcopy(current_spec))
 
     if err:
         result["error"] = err
-        module.fail_json(
-            msg="Failed generating DS category mapping update spec", **result
-        )
-
-    sg2 = SpecGenerator(module)
-    default_spec = mic_sdk.CategoryMapping()
-    spec, err2 = sg2.generate_spec(obj=default_spec)
-
-    if err2:
-        result["error"] = err2
-        module.fail_json(
-            msg="Failed generating DS category mapping update spec", **result
-        )
+        module.fail_json(msg="Failed generating Category Mapping update spec", **result)
 
     if module.check_mode:
         result["response"] = strip_internal_attributes(update_spec.to_dict())
@@ -335,7 +319,7 @@ def update_category_mapping(module, api_instance, result):
         current_spec.to_dict(), update_spec.to_dict()
     ):
         result["skipped"] = True
-        module.exit_json(msg="Nothing to change.")
+        module.exit_json(msg="Nothing to change.", **result)
 
     etag = get_etag(current_spec)
     kwargs = {"if_match": etag}
@@ -343,13 +327,13 @@ def update_category_mapping(module, api_instance, result):
 
     try:
         resp = api_instance.update_ds_category_mapping_by_id(
-            extId=ext_id, body=spec, **kwargs
+            extId=ext_id, body=update_spec, **kwargs
         )
     except Exception as e:
         raise_api_exception(
             module=module,
             exception=e,
-            msg="Api Exception raised while updating DS category mapping",
+            msg="Api Exception raised while updating Category Mapping",
         )
 
     task_ext_id = resp.data.ext_id
@@ -357,8 +341,10 @@ def update_category_mapping(module, api_instance, result):
     result["response"] = strip_internal_attributes(resp.data.to_dict())
 
     if task_ext_id and module.params.get("wait"):
-        wait_for_completion(module, task_ext_id)
+        task_status = wait_for_completion(module, task_ext_id)
+        result["response"] = strip_internal_attributes(task_status.to_dict())
         resp = get_ds_category_mapping(module, api_instance, ext_id)
+        result["ext_id"] = ext_id
         result["response"] = strip_internal_attributes(resp.to_dict())
 
     result["changed"] = True
@@ -369,7 +355,7 @@ def delete_category_mapping(module, api_instance, result):
     result["ext_id"] = ext_id
 
     if module.check_mode:
-        result["msg"] = "DS category mapping with ext_id:{0} will be deleted.".format(
+        result["msg"] = "Category Mapping with ext_id:{0} will be deleted.".format(
             ext_id
         )
         return
@@ -380,7 +366,7 @@ def delete_category_mapping(module, api_instance, result):
         raise_api_exception(
             module=module,
             exception=e,
-            msg="Api Exception raised while deleting DS category mapping",
+            msg="Api Exception raised while deleting Category Mapping",
         )
 
     task_ext_id = resp.data.ext_id
@@ -399,7 +385,7 @@ def run_module():
         argument_spec=get_module_spec(),
         supports_check_mode=True,
         required_if=[
-            ("state", "present", ("name",)),
+            ("state", "present", ("name", "ext_id"), True),
             ("state", "absent", ("ext_id",)),
         ],
     )

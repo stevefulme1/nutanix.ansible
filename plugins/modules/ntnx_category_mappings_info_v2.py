@@ -11,28 +11,26 @@ __metaclass__ = type
 DOCUMENTATION = r"""
 ---
 module: ntnx_category_mappings_info_v2
-short_description: Get DS category mappings info
+short_description: Get Directory Service Category Mappings info
 version_added: 2.6.0
 description:
-    - Fetch specific DS category mapping info using external ID
-    - Fetch list of multiple DS category mappings info if external ID is not provided with optional filters
+    - Fetch specific Directory Service Category Mapping info using external ID
+    - Fetch list of multiple Directory Service Category Mappings info if external ID is not provided with optional filters
     - This module uses PC v4 APIs based SDKs
 notes:
     - >-
       This module requires the following Nutanix IAM roles to be assigned to the user performing the operation.
     - >-
-      B(Get DS category mapping by ext_id) -
-      Operation Name: View Category Mapping -
-      Required Roles: Flow Admin, Flow Viewer, Prism Admin, Prism Viewer, Super Admin
+      B(Get Directory Service Category Mapping by ext_id) -
+      Required Roles: Consumer, Developer, Flow Admin, Flow Viewer, Prism Admin, Prism Viewer, Project Admin, Project Manager, Super Admin
     - >-
-      B(List DS Category Mappings) -
-      Operation Name: View Category Mapping -
-      Required Roles: Flow Admin, Flow Viewer, Prism Admin, Prism Viewer, Super Admin
+      B(List Directory Service Category Mappings) -
+      Required Roles: Consumer, Developer, Flow Admin, Flow Viewer, Prism Admin, Prism Viewer, Project Admin, Project Manager, Super Admin
     - "Ref: U(https://developers.nutanix.com/api-reference?namespace=microseg)"
 options:
     ext_id:
         description:
-            - External ID to fetch specific DS category mapping info
+            - External ID to fetch specific Directory Service Category Mapping info
         type: str
 extends_documentation_fragment:
       - nutanix.ncp.ntnx_credentials
@@ -41,10 +39,11 @@ extends_documentation_fragment:
       - nutanix.ncp.ntnx_proxy_v2
 author:
  - Abhinav Bansal (@abhinavbansal29)
+ - George Ghawali (@george-ghawali)
 """
 
 EXAMPLES = r"""
-- name: List all DS category mappings
+- name: List all Directory Service Category Mappings
   nutanix.ncp.ntnx_category_mappings_info_v2:
     nutanix_host: <pc_ip>
     nutanix_username: <user>
@@ -53,7 +52,7 @@ EXAMPLES = r"""
   register: result
   ignore_errors: true
 
-- name: List DS category mappings using filter
+- name: List Directory Service Category Mappings using filter
   nutanix.ncp.ntnx_category_mappings_info_v2:
     nutanix_host: <pc_ip>
     nutanix_username: <user>
@@ -63,7 +62,7 @@ EXAMPLES = r"""
   register: result
   ignore_errors: true
 
-- name: List DS category mappings using limit
+- name: List Directory Service Category Mappings using limit
   nutanix.ncp.ntnx_category_mappings_info_v2:
     nutanix_host: <pc_ip>
     nutanix_username: <user>
@@ -73,7 +72,7 @@ EXAMPLES = r"""
   register: result
   ignore_errors: true
 
-- name: Get DS category mapping using ext_id
+- name: Get Directory Service Category Mapping using ext_id
   nutanix.ncp.ntnx_category_mappings_info_v2:
     nutanix_host: <pc_ip>
     nutanix_username: <user>
@@ -87,9 +86,9 @@ EXAMPLES = r"""
 RETURN = r"""
 response:
   description:
-      - Response for fetching DS category mappings info
-      - One DS category mapping info if External ID is provided
-      - List of multiple DS category mappings info if External ID is not provided
+      - Response for fetching Directory Service Category Mappings info
+      - One Directory Service Category Mapping info if External ID is provided
+      - List of multiple Directory Service Category Mappings info if External ID is not provided
   returned: always
   type: dict
   sample:
@@ -129,18 +128,18 @@ msg:
     description: This indicates the message if any message occurred
     returned: When there is an error
     type: str
-    sample: "Api Exception raised while fetching DS category mappings info"
+    sample: "Api Exception raised while fetching Directory Service Category Mappings info"
 
 ext_id:
-  description: The DS category mapping ext_id
+  description: The Directory Service Category Mapping ext_id
   returned: when ext_id is provided
   type: str
   sample: "b215708c-252f-400c-bc90-2f36242d3d3c"
 
 total_available_results:
-    description: The total number of available DS category mappings in PC.
+    description: The total number of available Directory Service Category Mappings in PC.
     type: int
-    returned: when all DS category mappings are fetched
+    returned: when all Directory Service Category Mappings are fetched
     sample: 10
 """
 import warnings  # noqa: E402
@@ -184,7 +183,8 @@ def get_category_mappings(module, api_instance, result):
     if err:
         result["error"] = err
         module.fail_json(
-            msg="Failed generating DS category mappings info Spec", **result
+            msg="Failed generating Directory Service Category Mappings info Spec",
+            **result,
         )
 
     try:
@@ -193,7 +193,7 @@ def get_category_mappings(module, api_instance, result):
         raise_api_exception(
             module=module,
             exception=e,
-            msg="Api Exception raised while fetching DS category mappings info",
+            msg="Api Exception raised while fetching Directory Service Category Mappings info",
         )
 
     total_available_results = resp.metadata.total_available_results

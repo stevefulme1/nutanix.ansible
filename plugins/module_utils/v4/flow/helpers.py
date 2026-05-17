@@ -104,15 +104,15 @@ def strip_service_group_extra_attributes(obj):
     return obj
 
 
-def get_ds_category_mapping(module, api_instance, ext_id):
+def get_category_mapping(module, api_instance, ext_id):
     """
-    This method will return DS category mapping info using external ID.
+    This method will return Category Mapping info using external ID.
     Args:
         module: Ansible module
-        api_instance: DirectoryServerConfigsApi instance from ntnx_microseg_py_client sdk
-        ext_id (str): DS category mapping external ID
+        api_instance: CategoryMappingsApi instance from ntnx_microseg_py_client sdk
+        ext_id (str): Category Mapping external ID
     Returns:
-        category_mapping (object): DS category mapping info
+        category_mapping (object): Category Mapping info
     """
     try:
         return api_instance.get_ds_category_mapping_by_id(extId=ext_id).data
@@ -120,5 +120,5 @@ def get_ds_category_mapping(module, api_instance, ext_id):
         raise_api_exception(
             module=module,
             exception=e,
-            msg="Api Exception raised while fetching DS category mapping info using ext_id",
+            msg="Api Exception raised while fetching Category Mapping info using ext_id",
         )
