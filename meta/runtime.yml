@@ -250,3 +250,5 @@ action_groups:
     - ntnx_entity_groups_info_v2
     - ntnx_category_mapping_v2
     - ntnx_category_mappings_info_v2
+    - ntnx_directory_server_config_v2
+    - ntnx_directory_server_configs_info_v2

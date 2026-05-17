@@ -205,7 +205,7 @@ from ..module_utils.v4.flow.api_client import (  # noqa: E402
     get_directory_server_configs_api_instance,
     get_etag,
 )
-from ..module_utils.v4.flow.helpers import get_ds_category_mapping  # noqa: E402
+from ..module_utils.v4.flow.helpers import get_category_mapping  # noqa: E402
 from ..module_utils.v4.prism.tasks import (  # noqa: E402
     get_entity_ext_id_from_task,
     wait_for_completion,
@@ -283,7 +283,7 @@ def create_category_mapping(module, api_instance, result):
             task_status, rel=TASK_CONSTANTS.RelEntityType.CATEGORY_MAPPING
         )
         if ext_id:
-            resp = get_ds_category_mapping(module, api_instance, ext_id)
+            resp = get_category_mapping(module, api_instance, ext_id)
             result["ext_id"] = ext_id
             result["response"] = strip_internal_attributes(resp.to_dict())
 
@@ -303,7 +303,7 @@ def update_category_mapping(module, api_instance, result):
     ext_id = module.params.get("ext_id")
     result["ext_id"] = ext_id
 
-    current_spec = get_ds_category_mapping(module, api_instance, ext_id)
+    current_spec = get_category_mapping(module, api_instance, ext_id)
     sg = SpecGenerator(module)
     update_spec, err = sg.generate_spec(obj=deepcopy(current_spec))
 
@@ -343,7 +343,7 @@ def update_category_mapping(module, api_instance, result):
     if task_ext_id and module.params.get("wait"):
         task_status = wait_for_completion(module, task_ext_id)
         result["response"] = strip_internal_attributes(task_status.to_dict())
-        resp = get_ds_category_mapping(module, api_instance, ext_id)
+        resp = get_category_mapping(module, api_instance, ext_id)
         result["ext_id"] = ext_id
         result["response"] = strip_internal_attributes(resp.to_dict())
 

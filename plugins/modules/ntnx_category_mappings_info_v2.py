@@ -149,7 +149,7 @@ from ..module_utils.v4.base_info_module import BaseInfoModule  # noqa: E402
 from ..module_utils.v4.flow.api_client import (  # noqa: E402
     get_directory_server_configs_api_instance,
 )
-from ..module_utils.v4.flow.helpers import get_ds_category_mapping  # noqa: E402
+from ..module_utils.v4.flow.helpers import get_category_mapping  # noqa: E402
 from ..module_utils.v4.spec_generator import SpecGenerator  # noqa: E402
 from ..module_utils.v4.utils import (  # noqa: E402
     raise_api_exception,
@@ -170,7 +170,7 @@ def get_module_spec():
 
 def get_category_mapping_using_ext_id(module, api_instance, result):
     ext_id = module.params.get("ext_id")
-    resp = get_ds_category_mapping(module, api_instance, ext_id)
+    resp = get_category_mapping(module, api_instance, ext_id)
     result["ext_id"] = ext_id
     result["response"] = strip_internal_attributes(resp.to_dict())
 

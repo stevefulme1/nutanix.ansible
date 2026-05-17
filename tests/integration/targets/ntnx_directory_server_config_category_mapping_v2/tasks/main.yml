@@ -10,5 +10,6 @@
       nutanix_debug: "{{ nutanix_debug | default(omit) }}"
       nutanix_log_file: "{{ nutanix_log_file | default(omit) }}"
   block:
-    - name: Import category_mappings.yml
-      ansible.builtin.import_tasks: category_mappings.yml
+    - name: Import directory_server_config_category_mapping.yml
+      ansible.builtin.import_tasks: directory_server_config_category_mapping.yml
+      ignore_errors: true
