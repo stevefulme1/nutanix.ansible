@@ -12,4 +12,3 @@
   block:
     - name: Import directory_server_config_category_mapping.yml
       ansible.builtin.import_tasks: directory_server_config_category_mapping.yml
-      ignore_errors: true
