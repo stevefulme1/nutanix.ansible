@@ -123,6 +123,7 @@ def get_category_mapping(module, api_instance, ext_id):
             msg="Api Exception raised while fetching Category Mapping info using ext_id",
         )
 
+
 def get_directory_server_config(module, api_instance, ext_id):
     """
     This method will return directory server config info using external ID.

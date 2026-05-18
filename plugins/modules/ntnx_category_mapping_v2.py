@@ -63,12 +63,6 @@ options:
                     - The object identifier for the object in Active Directory.
                 type: str
                 required: true
-            status:
-                description:
-                    - The mapping status of Active Directory Mapping.
-                type: str
-                required: false
-                choices: ["USABLE", "DIRECTORY_NOT_CONFIGURED", "DELETED"]
 
 extends_documentation_fragment:
       - nutanix.ncp.ntnx_credentials
@@ -232,7 +226,6 @@ def get_module_spec():
     ad_info_spec = dict(
         directory_service_reference=dict(type="str", required=True),
         object_identifier=dict(type="str", required=True),
-        object_path=dict(type="str", required=False),
     )
 
     module_args = dict(
