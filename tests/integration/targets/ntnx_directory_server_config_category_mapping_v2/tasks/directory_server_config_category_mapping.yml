@@ -170,6 +170,9 @@
       - create_result.response.category_value == selected_category_value
       - create_result.response.ad_info.directory_service_reference == "{{ active_directory_ext_id }}"
       - create_result.response.ad_info.object_identifier == "{{ active_directory_object_ext_id }}"
+      - create_result.response.ad_info.object_path is defined
+      - create_result.response.ad_info.object_path | length > 0
+      - create_result.response.ad_info.status == "USABLE"
     fail_msg: Create DS category mapping failed
     success_msg: Create DS category mapping passed
 
@@ -305,6 +308,9 @@
       - update_result.response.category_value == "{{ selected_category_value }}_updated"
       - update_result.response.ad_info.directory_service_reference == "{{ directory_service_ref_second }}"
       - update_result.response.ad_info.object_identifier == "{{ active_directory_object_ext_id }}"
+      - update_result.response.ad_info.object_path is defined
+      - update_result.response.ad_info.object_path | length > 0
+      - update_result.response.ad_info.status == "USABLE"
     fail_msg: Update DS category mapping failed
     success_msg: Update DS category mapping passed
 
@@ -438,6 +444,9 @@
       - get_result.response.category_value == "{{ selected_category_value }}_updated"
       - get_result.response.ad_info.directory_service_reference == "{{ directory_service_ref_second }}"
       - get_result.response.ad_info.object_identifier == "{{ active_directory_object_ext_id }}"
+      - get_result.response.ad_info.object_path is defined
+      - get_result.response.ad_info.object_path | length > 0
+      - get_result.response.ad_info.status == "USABLE"
     fail_msg: Get DS category mapping using ext_id failed
     success_msg: Get DS category mapping using ext_id passed
 
@@ -458,6 +467,9 @@
       - list_all_result.response is defined
       - list_all_result.response | length >= 1
       - list_all_result.total_available_results >= 1
+      - list_all_result.response[0].ad_info.object_path is defined
+      - list_all_result.response[0].ad_info.object_path | length > 0
+      - list_all_result.response[0].ad_info.status == "USABLE"
     fail_msg: List all DS category mappings failed
     success_msg: List all DS category mappings passed
 
@@ -479,6 +491,9 @@
       - list_with_filter_result.response is defined
       - list_with_filter_result.response | length == 1
       - list_with_filter_result.response[0].name == "{{ category_mapping_name }}_updated"
+      - list_with_filter_result.response[0].ad_info.object_path is defined
+      - list_with_filter_result.response[0].ad_info.object_path | length > 0
+      - list_with_filter_result.response[0].ad_info.status == "USABLE"
     fail_msg: List DS category mappings with filter failed
     success_msg: List DS category mappings with filter passed
 
@@ -499,6 +514,9 @@
       - list_with_limit_result.failed == false
       - list_with_limit_result.response is defined
       - list_with_limit_result.response | length == 1
+      - list_with_limit_result.response[0].ad_info.object_path is defined
+      - list_with_limit_result.response[0].ad_info.object_path | length > 0
+      - list_with_limit_result.response[0].ad_info.status == "USABLE"
     fail_msg: List DS category mappings with limit failed
     success_msg: List DS category mappings with limit passed
 
