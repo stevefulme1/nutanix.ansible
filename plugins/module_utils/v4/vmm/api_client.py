@@ -1,4 +1,4 @@
-# Copyright: (c) 2024, Nutanix
+# Copyright: (c) 2026, Nutanix
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -131,3 +131,15 @@ def get_ova_api_instance(module):
     """
     api_client = get_api_client(module)
     return ntnx_vmm_py_client.OvasApi(api_client=api_client)
+
+
+def get_template_placement_policy_api_instance(module):
+    """
+    This method will return Template Placement Policy API instance.
+    Args:
+        module (obj): Ansible module object with connection parameters
+    Returns:
+        TemplatePlacementPoliciesApi: v4 Template Placement Policy api instance
+    """
+    api_client = get_api_client(module)
+    return ntnx_vmm_py_client.TemplatePlacementPoliciesApi(api_client=api_client)
